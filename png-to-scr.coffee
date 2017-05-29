@@ -344,14 +344,15 @@ class Converter
             unless preserveNeighbors is @constructor.ConversionStrategy.NeighboursNo
               # If we have any neighbors, try to use their information instead.
               analyzeNeighbor = (neighbourX, neighbourY) =>
+                neighborBlockData = @blockData[neighbourX][neighbourY]
                 neighborAttribute = @attributeData[neighbourX][neighbourY]
                 videoMemoryRow = @_screenRowToVideoMemoryRow neighbourY * 8
                 neighborConvertSingleToInk = @videoMemory[neighbourX + videoMemoryRow * 32] > 0
 
                 # If the neighbor uses any of the same colors as us, try to match their selection.
-                if attribute.paper is attribute.ink
+                if blockData.colors.length is 1
                   # We're of single color. See if the neighbor was as well.
-                  if neighborAttribute.paper is neighborAttribute.ink
+                  if neighborBlockData.colors.length is 1
                     # The neighbour was also single color, so we should just do what they did if our colors match.
                     blockConvertSingleToInk = neighborConvertSingleToInk if attribute.ink is neighborAttribute.ink
 
@@ -364,7 +365,7 @@ class Converter
                   doSwitch = false
 
                   #  See if the neighbor was single.
-                  if neighborAttribute.paper is neighborAttribute.ink
+                  if neighborBlockData.colors.length is 1
                     # Are they using their color as ink?
                     if neighborConvertSingleToInk
                       # Yes! We should match our ink to theirs.
@@ -415,6 +416,16 @@ class Converter
                 else
                   analyzeNeighbor blockX - 1, blockY if blockX > 0
                   analyzeNeighbor blockX, blockY - 1 if blockY > 0
+
+            # Don't use same paper and ink, to support drawing software that would not display their cursor in that case.
+            if blockData.colors.length is 1
+              if blockConvertSingleToInk
+                # Paper will be unused.
+                attribute.paper = 7 - attribute.ink
+
+              else
+                # Ink will be unused.
+                attribute.ink = 7 - attribute.paper
 
             attributeValue = 0
             attributeValue += attribute.brightness << 6
