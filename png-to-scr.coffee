@@ -345,7 +345,8 @@ class Converter
               # If we have any neighbors, try to use their information instead.
               analyzeNeighbor = (neighbourX, neighbourY) =>
                 neighborAttribute = @attributeData[neighbourX][neighbourY]
-                neighborConvertSingleToInk = @videoMemory[neighbourX + neighbourY * 8 * 32] > 0
+                videoMemoryRow = @_screenRowToVideoMemoryRow neighbourY * 8
+                neighborConvertSingleToInk = @videoMemory[neighbourX + videoMemoryRow * 32] > 0
 
                 # If the neighbor uses any of the same colors as us, try to match their selection.
                 if attribute.paper is attribute.ink
@@ -443,11 +444,7 @@ class Converter
                 bitValue = 1 << bitIndex
                 rowValue += bitValue * pixelValue
 
-              thirdIndex = Math.floor (blockY * 8 + y) / 64
-              blockRowInThird = blockY % 8
-              rowInBlock = y % 8
-
-              rowInVideoMemory = thirdIndex * 64 + rowInBlock * 8 + blockRowInThird
+              rowInVideoMemory = @_screenRowToVideoMemoryRow blockY * 8 + y
 
               @videoMemory[blockX + rowInVideoMemory * 32] = rowValue
 
@@ -456,6 +453,16 @@ class Converter
     @_processJobQueue jobQueue, =>
       $('.screen-cursor').hide()
       conversionDoneCallback?()
+
+  _screenRowToVideoMemoryRow: (y) ->
+    rowY = y % 8
+    blockY = (y - rowY) / 8
+
+    thirdIndex = Math.floor (blockY * 8 + rowY) / 64
+    blockRowInThird = blockY % 8
+    rowInBlock = rowY % 8
+
+    thirdIndex * 64 + rowInBlock * 8 + blockRowInThird
 
   downloadScr: ->
     @_download [@videoMemory], 'scr'

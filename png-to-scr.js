@@ -446,7 +446,7 @@
         fn = (function(_this) {
           return function(blockX, blockY) {
             return jobQueue.push(function() {
-              var analyzeNeighbor, analyzeNeighborMatch, attribute, attributeValue, bitIndex, bitValue, blockConvertSingleToInk, blockData, blockRowInThird, i, l, leftMatch, m, n, pixelValue, pixelX, pixelY, previewColor, rowInBlock, rowInVideoMemory, rowValue, thirdIndex, upMatch, x, y;
+              var analyzeNeighbor, analyzeNeighborMatch, attribute, attributeValue, bitIndex, bitValue, blockConvertSingleToInk, blockData, i, l, leftMatch, m, n, pixelValue, pixelX, pixelY, previewColor, rowInVideoMemory, rowValue, upMatch, x, y;
               $('.screen-cursor').css({
                 left: blockX * 16,
                 top: blockY * 16
@@ -457,9 +457,10 @@
               blockConvertSingleToInk = convertSingleToInk;
               if (preserveNeighbors !== _this.constructor.ConversionStrategy.NeighboursNo) {
                 analyzeNeighbor = function(neighbourX, neighbourY) {
-                  var doSwitch, neighborAttribute, neighborConvertSingleToInk, ref;
+                  var doSwitch, neighborAttribute, neighborConvertSingleToInk, ref, videoMemoryRow;
                   neighborAttribute = _this.attributeData[neighbourX][neighbourY];
-                  neighborConvertSingleToInk = _this.videoMemory[neighbourX + neighbourY * 8 * 32] > 0;
+                  videoMemoryRow = _this._screenRowToVideoMemoryRow(neighbourY * 8);
+                  neighborConvertSingleToInk = _this.videoMemory[neighbourX + videoMemoryRow * 32] > 0;
                   if (attribute.paper === attribute.ink) {
                     if (neighborAttribute.paper === neighborAttribute.ink) {
                       if (attribute.ink === neighborAttribute.ink) {
@@ -563,10 +564,7 @@
                   bitValue = 1 << bitIndex;
                   rowValue += bitValue * pixelValue;
                 }
-                thirdIndex = Math.floor((blockY * 8 + y) / 64);
-                blockRowInThird = blockY % 8;
-                rowInBlock = y % 8;
-                rowInVideoMemory = thirdIndex * 64 + rowInBlock * 8 + blockRowInThird;
+                rowInVideoMemory = _this._screenRowToVideoMemoryRow(blockY * 8 + y);
                 _this.videoMemory[blockX + rowInVideoMemory * 32] = rowValue;
               }
               return _this.updateScreen();
@@ -583,6 +581,16 @@
           return typeof conversionDoneCallback === "function" ? conversionDoneCallback() : void 0;
         };
       })(this));
+    };
+
+    Converter.prototype._screenRowToVideoMemoryRow = function(y) {
+      var blockRowInThird, blockY, rowInBlock, rowY, thirdIndex;
+      rowY = y % 8;
+      blockY = (y - rowY) / 8;
+      thirdIndex = Math.floor((blockY * 8 + rowY) / 64);
+      blockRowInThird = blockY % 8;
+      rowInBlock = rowY % 8;
+      return thirdIndex * 64 + rowInBlock * 8 + blockRowInThird;
     };
 
     Converter.prototype.downloadScr = function() {
