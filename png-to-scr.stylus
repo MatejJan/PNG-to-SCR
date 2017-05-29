@@ -1,0 +1,179 @@
+black = #000
+red = #b00
+blue = #00b
+magenta = #b0b
+green = #0b0
+cyan = #0bb
+yellow = #bb0
+white = #bbb
+brightRed = #f00
+brightBlue = #00f
+brightMagenta = #f0f
+brightGreen = #0f0
+brightCyan = #0ff
+brightYellow = #ff0
+brightWhite = #fff
+
+pixel-drop-shadow(color)
+  value = ()
+  for x in (1..8)
+    push(value, "%srem %srem 0 %s" % (x x color))
+
+  box-shadow unquote(join(',', value))
+
+html
+  margin 0
+  padding 0
+  height 100%
+  font-family "ZX Spectrum"
+  -webkit-font-smoothing none
+  -moz-osx-font-smoothing grayscale
+  image-rendering pixelated
+  font-size 2px
+  color black
+  background white
+
+body
+  margin 0
+  padding 24rem 24rem 32rem
+  position relative
+  font-size 8rem
+  min-height 100%
+
+*
+  box-sizing border-box
+
+:focus
+  outline-none
+
+.scanlines
+  position fixed
+  z-index 1
+  top 0
+  bottom 0
+  left 0
+  right 0
+  pointer-events none
+  background -webkit-repeating-linear-gradient(top, transparent 0px, transparent 1px, rgba(0,0,0,0.25) 1px, rgba(0,0,0,0.25) 2px)
+  background-size 100% 2px
+
+.title
+  position relative
+  top -8rem
+  left -8rem
+  margin 0 0 8rem
+  padding 8rem
+  height 48rem
+  font-family "Retrotype"
+  font-size 32rem
+  background brightBlue
+  font-weight normal
+  color brightWhite
+  pixel-drop-shadow blue
+  text-align center
+
+.menu
+  margin-bottom 8rem
+  .item
+    display inline-block
+    padding 8rem
+    text-transform uppercase
+    background blue
+    color white
+    cursor pointer
+
+    &:hover
+      background brightBlue
+      color brightWhite
+
+  .open
+    .file-input
+      display none
+
+.image-analysis
+  margin-bottom 8rem
+
+  .image-area
+    position relative
+
+    .current-block
+      position absolute
+      display none
+      width 8rem
+      height 8rem
+      background brightYellow
+
+    .error-blocks
+      .error-block
+        width 8rem
+        height 8rem
+        position absolute
+        background brightRed
+        animation error-blink 1s step-start 0s infinite
+
+  .histogram
+    display none
+    margin-top 8rem
+    border 1rem solid black
+    border-top none
+    width 256rem
+    height 16rem
+
+  .status
+    margin-top 8rem
+
+.downloads
+  display none
+
+  .screen-area
+    margin-bottom 8rem
+    position relative
+
+    .screen
+      width 256rem
+      height 192rem
+
+    .screen-cursor
+      position absolute
+      display none
+      width 8rem
+      height 8rem
+      background black
+
+  .conversion-options
+    display inline-block
+    vertical-align top
+
+    p
+      margin 8rem 0 0
+
+      &:first-child
+        margin-top 0
+
+    .option
+      padding 0 8rem
+      cursor pointer
+
+      &:hover
+        background brightWhite
+
+      &.selected
+        cursor default
+        background blue
+        color white
+
+  .menu
+    display none
+
+.smallprint
+  position absolute
+  left 24rem
+  bottom 16rem
+
+  .copyleft
+    display inline-block
+    transform scale(-1, 1)
+
+@keyframes error-blink
+  50%
+    background brightWhite

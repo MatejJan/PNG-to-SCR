@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PNG to SCR</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+  <script src="png-to-scr.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://static.tumblr.com/twhmeyj/cVMm2xryf/fonts.css" />
+  <link rel="stylesheet" href="png-to-scr.css"/>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <h1 class="title">
+    <span class="retronator">Retronator</span>
+    <span class="png-to-scr">png to scr</span>
+  </h1>
+  <div class="menu">
+    <label class="item open">Open<input class="file-input" type="file"/></label>
+  </div>
+  <div class="image-analysis">
+    <div class="image-area">
+      <img class="image-preview"/>
+      <div class="current-block"></div>
+      <div class="error-blocks"></div>
+      <div class="error-block-info"></div>
+    </div>
+    <div class="histogram-area">
+      <canvas class="histogram" width="256" height="16"></canvas>
+    </div>
+    <div class="status"></div>
+  </div>
+  <div class="downloads">
+    <div class="screen-area">
+      <canvas class="screen" width="256" height="192"></canvas>
+      <div class="screen-cursor"></div>
+      <div class="conversion-options">
+        <p>Color to use<br/>as paper:</p>
+        <div class="option-group">
+          <div class="option lighter selected">Lighter</div>
+          <div class="option darker">Darker</div>
+          <div class="option bigger">Bigger area</div>
+          <div class="option smaller">Smaller area</div>
+        </div>
+        <p>Single color<br/>blocks use:</p>
+        <div class="option-group">
+          <div class="option single-paper selected">Paper</div>
+          <div class="option single-ink">Ink</div>
+        </div>
+        <p>Preserve<br/>neighbor's<br/>colors:</p>
+        <div class="option-group">
+          <div class="option neighbor-no selected">No</div>
+          <div class="option neighbor-left">Left</div>
+          <div class="option neighbor-up">Up</div>
+          <div class="option neighbor-match">Match</div>
+        </div>
+      </div>
+    </div>
+    <div class="menu">
+      <div class="item download-scr">Download scr</div>
+      <div class="item download-tap">Download tap</div>
+      <div class="item preview-tap">Preview tap</div>
+    </div>
+  </div>
+  <div class="smallprint"><span class="copyleft">©</span> 2017 Retronator LLC</div>
+</body>
+</html>
