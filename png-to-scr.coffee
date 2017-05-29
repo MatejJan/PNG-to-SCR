@@ -354,7 +354,7 @@ class Converter
                   # We're of single color. See if the neighbor was as well.
                   if neighborBlockData.colors.length is 1
                     # The neighbour was also single color, so we should just do what they did if our colors match.
-                    blockConvertSingleToInk = neighborConvertSingleToInk if attribute.ink is neighborAttribute.ink
+                    blockConvertSingleToInk = neighborConvertSingleToInk if attribute.ink is (if neighborConvertSingleToInk then neighborAttribute.ink else neighborAttribute.paper)
 
                   else
                     # If our color is neighbour's ink color, we should be too.
